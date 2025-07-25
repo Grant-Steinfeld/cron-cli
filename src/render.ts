@@ -1,4 +1,4 @@
-export function renderTable(awsExpr: string, rows: { ISO: string; Local: string }[]) {
+export function renderTable(awsExpr: string, rows: { ISO: string; Local: string; Pretty: string }[]) {
   console.log(`AWS Scheduler cron expression: ${awsExpr}`);
   console.table(rows);
   if (process.stdout.columns && process.stdout.columns < 80) {
@@ -6,12 +6,12 @@ export function renderTable(awsExpr: string, rows: { ISO: string; Local: string 
   }
 }
 
-export function renderJson(awsExpr: string, rows: { ISO: string; Local: string }[]) {
+export function renderJson(awsExpr: string, rows: { ISO: string; Local: string; Pretty: string }[]) {
   console.log(`AWS Scheduler cron expression: ${awsExpr}`);
   console.log(JSON.stringify(rows, null, 2));
 }
 
-export function renderCsv(awsExpr: string, rows: { ISO: string; Local: string }[]) {
+export function renderCsv(awsExpr: string, rows: { ISO: string; Local: string; Pretty: string }[]) {
   console.log(`AWS Scheduler cron expression: ${awsExpr}`);
   if (rows.length === 0) return;
   const headers = Object.keys(rows[0]);
@@ -21,7 +21,7 @@ export function renderCsv(awsExpr: string, rows: { ISO: string; Local: string }[
   }
 }
 
-export function renderTsv(awsExpr: string, rows: { ISO: string; Local: string }[]) {
+export function renderTsv(awsExpr: string, rows: { ISO: string; Local: string; Pretty: string }[]) {
   console.log(`AWS Scheduler cron expression: ${awsExpr}`);
   if (rows.length === 0) return;
   const headers = Object.keys(rows[0]);

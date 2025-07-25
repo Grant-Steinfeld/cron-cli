@@ -16,7 +16,7 @@ npm run build
 node dist/cron-cli.js "cron(0 0 3 9 ? *)" --count 10 --format table
 ```
 
-This prints the next 10 trigger dates for the given AWS Scheduler cron expression in a table format.
+This prints the next 10 trigger dates for the given AWS Scheduler cron expression in a table format, including a human-friendly Pretty date column (e.g., `Jan 1st 2026`).
 
 ### CLI Options
 
@@ -25,27 +25,27 @@ This prints the next 10 trigger dates for the given AWS Scheduler cron expressio
 
 ### Examples
 
-**Print the next 5 yearly triggers as a table:**
+**Print the next 5 yearly triggers as a table (with Pretty date column):**
 ```sh
 node dist/cron-cli.js "cron(0 0 3 9 ? *)" --count 5 --format table
 ```
 
-**Print the next 4 quarterly triggers as JSON:**
+**Print the next 4 quarterly triggers as JSON (with Pretty date):**
 ```sh
 node dist/cron-cli.js "cron(0 0 1 1,4,7,10 ? *)" --count 4 --format json
 ```
 
-**Print the next 4 semi-annual triggers as CSV:**
+**Print the next 4 semi-annual triggers as CSV (with Pretty date):**
 ```sh
 node dist/cron-cli.js "cron(0 0 1 1,7 ? *)" --count 4 --format csv
 ```
 
-**Print the next 4 semi-annual triggers as TSV:**
+**Print the next 4 semi-annual triggers as TSV (with Pretty date):**
 ```sh
 node dist/cron-cli.js "cron(0 0 1 1,7 ? *)" --count 4 --format tsv
 ```
 
-**Print only the next trigger date:**
+**Print only the next trigger date (with Pretty date):**
 ```sh
 node dist/cron-cli.js "cron(0 0 3 9 ? *)" --count 1 --format table
 ```
@@ -55,12 +55,12 @@ node dist/cron-cli.js "cron(0 0 3 9 ? *)" --count 1 --format table
 node dist/cron-cli.js "cron(0 0 3 9 ? *)" --count 0 --format table
 ```
 
-**Handle leap year (Feb 29):**
+**Handle leap year (Feb 29, with Pretty date):**
 ```sh
 node dist/cron-cli.js "cron(0 0 29 2 ? *)" --count 3 --format table
 ```
 
-**Print the next 20 yearly triggers (large count):**
+**Print the next 20 yearly triggers (large count, with Pretty date):**
 ```sh
 node dist/cron-cli.js "cron(0 0 3 9 ? *)" --count 20 --format table
 ```
@@ -76,7 +76,7 @@ node dist/cron-cli.js "cron(invalid cron)" --count 2
 npm test
 ```
 
-The tests use a frozen date (January 1, 2025) and America/New_York timezone for deterministic results. Output format does not affect test results.
+The tests use a frozen date (January 1, 2025) and America/New_York timezone for deterministic results. Output format and the Pretty date column do not affect test results.
 
 ### Development
 
