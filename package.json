@@ -1,0 +1,24 @@
+{
+    "name": "cron-parser-cli",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "dist/cron-cli.js",
+    "bin": {
+        "cron-cli": "dist/cron-cli.js"
+    },
+    "scripts": {
+        "build": "tsc",
+        "start": "node dist/cron-cli.js",
+        "test": "jest"
+    },
+    "dependencies": {
+        "cron-parser": "^5.3.0"
+    },
+    "devDependencies": {
+        "@types/jest": "^29.5.14",
+        "@types/node": "^22.14.0",
+        "jest": "^29.7.0",
+        "ts-jest": "^29.3.1",
+        "typescript": "^5.0.0"
+    }
+}
