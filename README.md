@@ -1,4 +1,4 @@
-# cli esm Typescript exerciser test harness
+# cron-parser
 
 ## Usage
 
@@ -13,30 +13,61 @@ npm run build
 ### Run
 
 ```sh
-node dist/cron-cli.js "cron(0 0 3 9 ? *)" --count 10
+node dist/cron-cli.js "cron(0 0 3 9 ? *)" --count 10 --format table
 ```
 
-This prints the next 10 trigger dates for the given AWS Scheduler cron expression.
+This prints the next 10 trigger dates for the given AWS Scheduler cron expression in a table format.
 
 ### CLI Options
 
 - `--count N` — Print the next N trigger dates (default: 1)
+- `--format table|json|csv|tsv` — Output format (default: table)
 
 ### Examples
 
-**Print the next 5 yearly triggers:**
+**Print the next 5 yearly triggers as a table:**
 ```sh
-node dist/cron-cli.js "cron(0 0 3 9 ? *)" --count 5
+node dist/cron-cli.js "cron(0 0 3 9 ? *)" --count 5 --format table
 ```
 
-**Print the next 4 quarterly triggers (1st day of Jan, Apr, Jul, Oct):**
+**Print the next 4 quarterly triggers as JSON:**
 ```sh
-node dist/cron-cli.js "cron(0 0 1 1,4,7,10 ? *)" --count 4
+node dist/cron-cli.js "cron(0 0 1 1,4,7,10 ? *)" --count 4 --format json
 ```
 
-**Print the next 4 semi-annual triggers (1st day of Jan and Jul):**
+**Print the next 4 semi-annual triggers as CSV:**
 ```sh
-node dist/cron-cli.js "cron(0 0 1 1,7 ? *)" --count 4
+node dist/cron-cli.js "cron(0 0 1 1,7 ? *)" --count 4 --format csv
+```
+
+**Print the next 4 semi-annual triggers as TSV:**
+```sh
+node dist/cron-cli.js "cron(0 0 1 1,7 ? *)" --count 4 --format tsv
+```
+
+**Print only the next trigger date:**
+```sh
+node dist/cron-cli.js "cron(0 0 3 9 ? *)" --count 1 --format table
+```
+
+**Print nothing for --count 0 (but still show the cron expression):**
+```sh
+node dist/cron-cli.js "cron(0 0 3 9 ? *)" --count 0 --format table
+```
+
+**Handle leap year (Feb 29):**
+```sh
+node dist/cron-cli.js "cron(0 0 29 2 ? *)" --count 3 --format table
+```
+
+**Print the next 20 yearly triggers (large count):**
+```sh
+node dist/cron-cli.js "cron(0 0 3 9 ? *)" --count 20 --format table
+```
+
+**Show error for invalid cron expression:**
+```sh
+node dist/cron-cli.js "cron(invalid cron)" --count 2
 ```
 
 ### Test
@@ -45,11 +76,12 @@ node dist/cron-cli.js "cron(0 0 1 1,7 ? *)" --count 4
 npm test
 ```
 
-The tests use a frozen date (January 1, 2025) and America/New_York timezone for deterministic results.
+The tests use a frozen date (January 1, 2025) and America/New_York timezone for deterministic results. Output format does not affect test results.
 
 ### Development
 
 - Edit the CLI source in `src/cron-cli.ts`.
+- Edit core logic in `src/logic.ts` and output formats in `src/render.ts`.
 - Rebuild with `npm run build` after making changes.
 - Run tests with `npm test`.
 
