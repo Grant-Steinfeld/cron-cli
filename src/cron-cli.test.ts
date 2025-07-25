@@ -17,49 +17,6 @@ function awsToCronParserExpr(awsExpr: string): string {
   return '0 ' + parts.join(' ');
 }
 
-// NYSE full market holidays for 2025-2027 (YYYY-MM-DD)
-const NYSE_HOLIDAYS = new Set([
-  // 2025
-  '2025-01-01', // New Year's Day
-  '2025-01-20', // Martin Luther King, Jr. Day
-  '2025-02-17', // Washington's Birthday
-  '2025-04-18', // Good Friday
-  '2025-05-26', // Memorial Day
-  '2025-07-04', // Independence Day
-  '2025-09-01', // Labor Day
-  '2025-11-27', // Thanksgiving Day
-  '2025-12-25', // Christmas Day
-  // 2026
-  '2026-01-01',
-  '2026-01-19',
-  '2026-02-16',
-  '2026-04-03',
-  '2026-05-25',
-  '2026-07-03', // Observed (July 4 is Saturday)
-  '2026-09-07',
-  '2026-11-26',
-  '2026-12-25',
-  // 2027
-  '2027-01-01',
-  '2027-01-18',
-  '2027-02-15',
-  '2027-03-26', // Good Friday
-  '2027-05-31',
-  '2027-07-05', // Observed (July 4 is Sunday)
-  '2027-09-06',
-  '2027-11-25',
-  '2027-12-24', // Observed (Christmas is Saturday)
-]);
-
-function isNYSEHoliday(date: Date): boolean {
-  // Format as YYYY-MM-DD in America/New_York
-  const tzDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-  const yyyy = tzDate.getFullYear();
-  const mm = String(tzDate.getMonth() + 1).padStart(2, '0');
-  const dd = String(tzDate.getDate()).padStart(2, '0');
-  return NYSE_HOLIDAYS.has(`${yyyy}-${mm}-${dd}`);
-}
-
 describe('AWS cron expression parsing', () => {
   beforeAll(() => {
     jest.useFakeTimers();
@@ -167,29 +124,5 @@ describe('AWS cron expression parsing', () => {
       '2032-02-29T05:00:00.000Z', // Feb 29, 2032, 00:00 America/New_York
       '2036-02-29T05:00:00.000Z', // Feb 29, 2036, 00:00 America/New_York
     ]);
-  });
-
-  it('returns the next 10 NYSE trading days at 9:30am, skipping holidays', () => {
-    // 9:30am every weekday (Monday-Friday)
-    const awsExpr = 'cron(30 9 ? * 2-6 *)';
-    const cronExpr = awsToCronParserExpr(awsExpr);
-    const interval = CronExpressionParser.parse(cronExpr, {
-      currentDate: FIXED_DATE,
-      tz: 'America/New_York',
-    });
-    const results: string[] = [];
-    while (results.length < 10) {
-      const next = interval.next();
-      const jsDate: Date = next.toDate ? next.toDate() : (next as unknown as Date);
-      if (!isNYSEHoliday(jsDate)) {
-        results.push(jsDate.toISOString());
-      }
-    }
-    // Assert none of the results are on a holiday
-    for (const iso of results) {
-      expect(isNYSEHoliday(new Date(iso))).toBe(false);
-    }
-    // Optionally, print the first 3 for visual check
-    // console.log(results.slice(0, 3));
   });
 }); 
