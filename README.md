@@ -1,4 +1,4 @@
-# cron-parser
+# cli esm Typescript exerciser test harness
 
 ## Usage
 
@@ -27,6 +27,16 @@ This prints the next 10 trigger dates for the given AWS Scheduler cron expressio
 **Print the next 5 yearly triggers:**
 ```sh
 node dist/cron-cli.js "cron(0 0 3 9 ? *)" --count 5
+```
+
+**Print the next 4 quarterly triggers (1st day of Jan, Apr, Jul, Oct):**
+```sh
+node dist/cron-cli.js "cron(0 0 1 1,4,7,10 ? *)" --count 4
+```
+
+**Print the next 4 semi-annual triggers (1st day of Jan and Jul):**
+```sh
+node dist/cron-cli.js "cron(0 0 1 1,7 ? *)" --count 4
 ```
 
 ### Test
