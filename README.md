@@ -2,7 +2,17 @@
 
 ## Usage
 
-This project provides a Node.js CLI (written in TypeScript) to parse AWS cron expressions and print the next N trigger dates using cron-parser.
+This project provides a Node.js CLI (written in TypeScript) to parse AWS Scheduler cron expressions (e.g., `cron(...)`) and print the next N trigger dates using cron-parser.
+
+### Supported AWS Scheduler Expression Types
+
+- **cron**: Standard cron expressions for recurring schedules. Example: `cron(0 0 3 9 ? *)`
+- **at**: Schedules a one-time execution at a specific time. Example: `at(2025-09-03T00:00:00)`
+- **rate**: Schedules recurring executions at a regular rate. Example: `rate(5 minutes)`
+
+See the [AWS Scheduler documentation](https://docs.aws.amazon.com/scheduler/latest/UserGuide/schedule-types.html) for more details on these expression types.
+
+> **Note:** This CLI currently supports only the `cron(...)` expression type for recurring schedules. Support for `at(...)` and `rate(...)` can be added if needed.
 
 ### Build
 
@@ -16,23 +26,17 @@ npm run build
 node dist/cron-cli.js "cron(0 0 3 9 ? *)" --count 10
 ```
 
-This prints the next 10 trigger dates for the given AWS cron expression.
+This prints the next 10 trigger dates for the given AWS Scheduler cron expression.
 
 ### CLI Options
 
 - `--count N` — Print the next N trigger dates (default: 1)
-- `--skip-nyse-holidays` — Skip NYSE holidays (2025-2027) when printing trigger dates
 
 ### Examples
 
 **Print the next 5 yearly triggers:**
 ```sh
 node dist/cron-cli.js "cron(0 0 3 9 ? *)" --count 5
-```
-
-**Print the next 10 NYSE trading days at 9:30am, skipping holidays:**
-```sh
-node dist/cron-cli.js "cron(30 9 ? * 2-6 *)" --count 10 --skip-nyse-holidays
 ```
 
 ### Test
