@@ -34,6 +34,12 @@ function parseArgs(args: string[]): { expr: string; count: number } {
   return { expr: exprParts.join(' '), count };
 }
 
+function wrap(str: string, width: number): string {
+  if (str.length <= width) return str;
+  const regex = new RegExp(`(.{1,${width}})`, 'g');
+  return str.match(regex)?.join('\n') ?? str;
+}
+
 async function main() {
   const args = process.argv.slice(2);
   if (args.length === 0 || args[0] === '-h' || args[0] === '--help') {
@@ -45,10 +51,18 @@ async function main() {
     const cronExpr = awsToCronParserExpr(awsExpr);
     const { CronExpressionParser } = await import('cron-parser');
     const interval = CronExpressionParser.parse(cronExpr, { tz: 'America/New_York' });
+    const rows = [];
     for (let i = 0; i < count; ++i) {
       const next = interval.next();
       const jsDate: Date = next.toDate ? next.toDate() : (next as unknown as Date);
-      console.log(jsDate.toISOString());
+      rows.push({
+        ISO: wrap(jsDate.toISOString(), 30),
+        Local: wrap(jsDate.toLocaleString('en-US', { timeZone: 'America/New_York' }), 30)
+      });
+    }
+    console.table(rows);
+    if (process.stdout.columns && process.stdout.columns < 80) {
+      console.log('\nNote: For best table display, use a wider terminal window.');
     }
   } catch (e: any) {
     console.error('Error:', e.message);
